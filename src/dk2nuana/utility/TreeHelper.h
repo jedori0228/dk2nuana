@@ -30,15 +30,21 @@ private:
   TTree* fTree{nullptr};
 
   // Detector positions
-  TVector3 DetPos_ICARUS; // [450.37, 7991.98, 79512.66],  # ICARUS TPC center in NuMI coords [cm]
+  TVector3 DetPos_ICARUS; // [450.37, 7991.98, 79512.66], https://github.com/woodtp/dk2nu-numi-flux/blob/main/config.toml#L2C5-L2C32, ICARUS TPC center in NuMI coords [cm]
+  TVector3 DetPos_MINERvA; // [-24.86, -24.0067, 103168.] https://github.com/NuSoftHEP/dk2nu/commit/ef125a07a190b3803731cf999c80a5c040f4edf4
 
   // Variables
   Int_t DecayProcess;
   Int_t NuPDG;
   Double_t ParentMom;
+  Double_t ImpWgt;
+  Double_t ENuCM;
   // ICARUS
   Double_t Weight_ICARUS;
   Double_t Enu_ICARUS;
+  // MINERvA
+  Double_t Weight_MINERvA;
+  Double_t Enu_MINERvA;
 
 };
 

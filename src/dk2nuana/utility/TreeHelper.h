@@ -40,6 +40,8 @@ private:
   Int_t DecayProcess;
   Int_t NuPDG;
   Double_t ParentMom;
+  Double_t ParentPt;
+  Double_t ParentCos;
   Double_t ImpWgt;
   Double_t ENuCM;
   // ICARUS

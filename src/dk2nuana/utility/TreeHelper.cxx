@@ -39,6 +39,8 @@ void TreeHelper::Init(){
   fTree->Branch("DecayProcess", &DecayProcess, "DecayProcess/I");
   fTree->Branch("NuPDG", &NuPDG, "NuPDG/I");
   fTree->Branch("ParentMom", &ParentMom, "ParentMom/D");
+  fTree->Branch("ParentPt", &ParentPt, "ParentPt/D");
+  fTree->Branch("ParentCos", &ParentCos, "ParentCos/D");
   fTree->Branch("ImpWgt", &ImpWgt, "ImpWgt/D");
   fTree->Branch("ENuCM", &ENuCM, "ENuCM/D");
   
@@ -62,6 +64,8 @@ void TreeHelper::Reset(){
   NuPDG = -999;
   ImpWgt = -999.;
   ParentMom = -999.;
+  ParentPt = -999.;
+  ParentCos = -999.;
   ENuCM = -999.;
 
   Weight_ICARUS = -999.;
@@ -89,6 +93,8 @@ void TreeHelper::FillVariable(bsim::Dk2Nu* _dk2nu){
   
   ImpWgt = _decay.nimpwt;
   ParentMom = sqrt(_decay.pdpx*_decay.pdpx + _decay.pdpy*_decay.pdpy + _decay.pdpz*_decay.pdpz);
+  ParentPt = sqrt(_decay.pdpx*_decay.pdpx + _decay.pdpy*_decay.pdpy);
+  ParentCos = abs(_decay.pdpz)/ParentMom;
 
   bsim::calcEnuWgt(_dk2nu, DetPos_ICARUS, Enu_ICARUS, Weight_ICARUS);
   Weight_ICARUS /= M_PI;

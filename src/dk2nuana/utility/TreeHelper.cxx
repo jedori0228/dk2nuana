@@ -11,6 +11,15 @@ TreeHelper::TreeHelper(){
   DetPos_ICARUS = TVector3(450.37, 7991.98, 79512.66);
   DetPos_MINERvA = TVector3(-24.86, -24.0067, 103168.);
 
+  // DUNE, on-axis
+  DetPos_DUNE_AllAxes.push_back( TVector3(0., 0., 57400.) );
+  for(int i=0; i<8; i++){
+    DetPos_DUNE_AllAxes.push_back( TVector3( (i*4.0) * 100., 0., 57400.) );
+  }
+  DetPos_DUNE_AllAxes.push_back( TVector3( (30.5) * 100., 0., 57400.) );
+
+  NDUNEPos = DetPos_DUNE_AllAxes.size();
+
 }
 
 TreeHelper::~TreeHelper(){
@@ -27,7 +36,6 @@ void TreeHelper::Init(){
 
   if(DoDebug) std::cout << "[TreeHelper::Init()] Define branches" << std::endl;
 
-  
   fTree->Branch("DecayProcess", &DecayProcess, "DecayProcess/I");
   fTree->Branch("NuPDG", &NuPDG, "NuPDG/I");
   fTree->Branch("ParentMom", &ParentMom, "ParentMom/D");
@@ -40,6 +48,9 @@ void TreeHelper::Init(){
   // MINERvA
   fTree->Branch("Weight_MINERvA", &Weight_MINERvA, "Weight_MINERvA/D");
   fTree->Branch("Enu_MINERvA", &Enu_MINERvA, "Enu_MINERvA/D");
+  // DUNE
+  fTree->Branch("Weights_DUNE", &Weights_DUNE);
+  fTree->Branch("Enus_DUNE", &Enus_DUNE);
   
   if(DoDebug) std::cout << "[TreeHelper::Init()] Done!" << std::endl;
 
@@ -59,13 +70,16 @@ void TreeHelper::Reset(){
   Weight_MINERvA = -999.;
   Enu_MINERvA = -999.;
 
-  
+  Weights_DUNE = std::vector<Double_t>(NDUNEPos, -999.);
+  Enus_DUNE = std::vector<Double_t>(NDUNEPos, -999.);
 
 }
 
 void TreeHelper::FillVariable(bsim::Dk2Nu* _dk2nu){
 
   if(DoDebug) std::cout << "[TreeHelper::FillVariable()] Called" << std::endl;
+
+  Reset();
 
   const auto& _decay = _dk2nu->decay;
 
@@ -82,7 +96,10 @@ void TreeHelper::FillVariable(bsim::Dk2Nu* _dk2nu){
   bsim::calcEnuWgt(_dk2nu, DetPos_MINERvA, Enu_MINERvA, Weight_MINERvA);
   Weight_MINERvA /= M_PI;
 
-
+  for(unsigned int i_DUNEPos=0; i_DUNEPos<NDUNEPos; i_DUNEPos++){
+    bsim::calcEnuWgt(_dk2nu, DetPos_DUNE_AllAxes[i_DUNEPos], Enus_DUNE[i_DUNEPos], Weights_DUNE[i_DUNEPos]);
+    Weights_DUNE[i_DUNEPos] /= M_PI;
+  }
 
   fTree->Fill();
 
